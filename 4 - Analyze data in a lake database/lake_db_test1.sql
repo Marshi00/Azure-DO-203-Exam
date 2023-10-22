@@ -1,0 +1,6 @@
+SELECT TOP (100) [CustomerId]
+,[FirstName]
+,[LastName]
+,[EmailAddress]
+,[Phone]
+ FROM [RetailDB].[dbo].[Customer]
