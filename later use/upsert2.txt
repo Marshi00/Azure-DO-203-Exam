@@ -1,0 +1,22 @@
+MERGE dbo.DimProduct AS tgt
+    USING (SELECT * FROM dbo.StageProducts) AS src
+    ON src.ProductID = tgt.ProductBusinessKey
+WHEN MATCHED THEN
+    -- Type 1 updates
+    UPDATE SET
+        tgt.ProductName = src.ProductName,
+        tgt.ProductCategory = src.ProductCategory,
+        tgt.Color = src.Color,
+        tgt.Size = src.Size,
+        tgt.ListPrice = src.ListPrice,
+        tgt.Discontinued = src.Discontinued
+WHEN NOT MATCHED THEN
+    -- New products
+    INSERT VALUES
+        (src.ProductID,
+        src.ProductName,
+        src.ProductCategory,
+        src.Color,
+        src.Size,
+        src.ListPrice,
+        src.Discontinued);

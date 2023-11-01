@@ -1,0 +1,21 @@
+INSERT INTO dbo.FactSales
+SELECT  (SELECT MAX(DateKey)
+         FROM dbo.DimDate
+         WHERE FullDateAlternateKey = stg.OrderDate) AS OrderDateKey,
+        (SELECT MAX(CustomerKey)
+         FROM dbo.DimCustomer
+         WHERE CustomerAlternateKey = stg.CustNo) AS CustomerKey,
+        (SELECT MAX(ProductKey)
+         FROM dbo.DimProduct
+         WHERE ProductAlternateKey = stg.ProductID) AS ProductKey,
+        (SELECT MAX(StoreKey)
+         FROM dbo.DimStore
+         WHERE StoreAlternateKey = stg.StoreID) AS StoreKey,
+        OrderNumber,
+        OrderLineItem,
+        OrderQuantity,
+        UnitPrice,
+        Discount,
+        Tax,
+        SalesAmount
+FROM dbo.StageSales AS stg

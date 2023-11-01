@@ -1,0 +1,14 @@
+MERGE target_table AS tgt
+USING (
+    SELECT *
+    FROM source_table
+    WHERE DateColumn >= DATEADD(MONTH, -1, GETDATE()) -- Filter for the last month
+) AS src
+ON tgt.PrimaryKey = src.PrimaryKey
+WHEN MATCHED THEN
+    -- Update existing records
+    UPDATE SET tgt.Column1 = src.Column1, tgt.Column2 = src.Column2, ...
+WHEN NOT MATCHED THEN
+    -- Insert new records
+    INSERT (PrimaryKey, Column1, Column2, ...)
+    VALUES (src.PrimaryKey, src.Column1, src.Column2, ...);

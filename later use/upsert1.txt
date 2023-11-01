@@ -1,0 +1,21 @@
+-- New Customers
+INSERT INTO dbo.DimCustomer
+SELECT stg.*
+FROM dbo.StageCustomers AS stg
+WHERE NOT EXISTS
+    (SELECT * FROM dbo.DimCustomer AS dim
+    WHERE dim.CustomerAltKey = stg.CustNo)
+
+-- Type 1 updates (name)
+UPDATE dbo.DimCustomer
+SET CustomerName = stg.CustomerName
+FROM dbo.StageCustomers AS stg
+WHERE dbo.DimCustomer.CustomerAltKey = stg.CustomerNo;
+
+-- Type 2 updates (StreetAddress)
+INSERT INTO dbo.DimCustomer
+SELECT stg.*
+FROM dbo.StageCustomers AS stg
+JOIN dbo.DimCustomer AS dim
+ON stg.CustNo = dim.CustomerAltKey
+AND stg.StreetAddress <> dim.StreetAddress;
