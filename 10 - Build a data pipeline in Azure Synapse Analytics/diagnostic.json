@@ -1,0 +1,23 @@
+{
+    "now": "2023-11-11T05:55:08.180Z",
+    "perfNow": 2977770.899999976,
+    "diagnosticCorrelation": "b7d14fac-d5c7-4106-8561-0314a53d9b52",
+    "source": "DownloadSupportFiles",
+    "environment": {
+        "productName": "a365",
+        "buildVersion": "23.1025.11",
+        "environmentType": 9,
+        "resourceName": "synapsentkmz0j",
+        "resourceRegion": "westeurope",
+        "resourceGroup": "dp203-ntkmz0j",
+        "subscriptionId": "829a22e0-ab51-4203-9590-79bae3d1504b",
+        "sessionId": "Rvh9H",
+        "operationId": "YLNuW",
+        "gitType": "live"
+    },
+    "additionalInfo": {
+        "selectedResource": "Load Product Data",
+        "selectedResourceType": "pipeline",
+        "dataFlowSessionId": "22ade8da-3031-4a80-9463-59826db8ae82"
+    }
+}

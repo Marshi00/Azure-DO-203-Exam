@@ -1,0 +1,15 @@
+{
+    "name": "synapsentkmz0j-WorkspaceDefaultStorage",
+    "type": "Microsoft.Synapse/workspaces/linkedservices",
+    "properties": {
+        "typeProperties": {
+            "url": "https://datalakentkmz0j.dfs.core.windows.net"
+        },
+        "type": "AzureBlobFS",
+        "connectVia": {
+            "referenceName": "AutoResolveIntegrationRuntime",
+            "type": "IntegrationRuntimeReference"
+        },
+        "annotations": []
+    }
+}
