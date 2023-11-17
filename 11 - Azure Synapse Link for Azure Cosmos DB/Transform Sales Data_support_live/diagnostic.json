@@ -1,0 +1,22 @@
+{
+    "now": "2023-11-13T19:08:51.285Z",
+    "perfNow": 2773639.399999976,
+    "diagnosticCorrelation": "1a92c4a4-f3e3-4336-8308-48a286a2da2e",
+    "source": "DownloadSupportFiles",
+    "environment": {
+        "productName": "a365",
+        "buildVersion": "23.1025.11",
+        "environmentType": 9,
+        "resourceName": "synapseahez51n",
+        "resourceRegion": "northeurope",
+        "resourceGroup": "dp203-ahez51n",
+        "subscriptionId": "829a22e0-ab51-4203-9590-79bae3d1504b",
+        "sessionId": "JoUGk",
+        "operationId": "9IVp9",
+        "gitType": "live"
+    },
+    "additionalInfo": {
+        "selectedResource": "Transform Sales Data",
+        "selectedResourceType": "pipeline"
+    }
+}

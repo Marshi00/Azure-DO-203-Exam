@@ -1,0 +1,275 @@
+{
+    "name": "Spark Transform",
+    "properties": {
+        "nbformat": 4,
+        "nbformat_minor": 2,
+        "bigDataPool": {
+            "referenceName": "sparkahez51n",
+            "type": "BigDataPoolReference"
+        },
+        "sessionProperties": {
+            "driverMemory": "28g",
+            "driverCores": 4,
+            "executorMemory": "28g",
+            "executorCores": 4,
+            "numExecutors": 2,
+            "conf": {
+                "spark.dynamicAllocation.enabled": "false",
+                "spark.dynamicAllocation.minExecutors": "2",
+                "spark.dynamicAllocation.maxExecutors": "2",
+                "spark.autotune.trackingId": "3ddea11b-0d04-4459-89f7-ab2e91b75390"
+            }
+        },
+        "metadata": {
+            "saveOutput": true,
+            "synapse_widget": {
+                "version": "0.1"
+            },
+            "enableDebugMode": false,
+            "kernelspec": {
+                "name": "synapse_pyspark",
+                "display_name": "Synapse PySpark"
+            },
+            "language_info": {
+                "name": "python"
+            },
+            "a365ComputeOptions": {
+                "id": "/subscriptions/829a22e0-ab51-4203-9590-79bae3d1504b/resourceGroups/dp203-ahez51n/providers/Microsoft.Synapse/workspaces/synapseahez51n/bigDataPools/sparkahez51n",
+                "name": "sparkahez51n",
+                "type": "Spark",
+                "endpoint": "https://synapseahez51n.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/sparkahez51n",
+                "auth": {
+                    "type": "AAD",
+                    "authResource": "https://dev.azuresynapse.net"
+                },
+                "sparkVersion": "3.2",
+                "nodeCount": 3,
+                "cores": 4,
+                "memory": 28,
+                "automaticScaleJobs": false
+            },
+            "sessionKeepAliveTimeout": 30
+        },
+        "cells": [
+            {
+                "cell_type": "markdown",
+                "source": [
+                    "# Transform data by using Spark\n",
+                    "\n",
+                    "This notebook transforms sales order data; converting it from CSV to Parquet format and splitting customer name into two separate fields.\n",
+                    "\n",
+                    "## Set variables"
+                ]
+            },
+            {
+                "cell_type": "code",
+                "metadata": {
+                    "jupyter": {
+                        "source_hidden": false,
+                        "outputs_hidden": false
+                    },
+                    "nteract": {
+                        "transient": {
+                            "deleting": false
+                        }
+                    }
+                },
+                "source": [
+                    "import uuid\r\n",
+                    "\r\n",
+                    "# Variable for unique folder name\r\n",
+                    "folderName = uuid.uuid4()"
+                ],
+                "outputs": [
+                    {
+                        "output_type": "display_data",
+                        "data": {
+                            "application/vnd.livy.statement-meta+json": {
+                                "spark_pool": "sparkahez51n",
+                                "session_id": "0",
+                                "statement_id": 3,
+                                "state": "finished",
+                                "livy_statement_state": "available",
+                                "queued_time": "2023-11-13T18:26:47.7925764Z",
+                                "session_start_time": null,
+                                "execution_start_time": "2023-11-13T18:26:47.9183313Z",
+                                "execution_finish_time": "2023-11-13T18:26:48.0659925Z",
+                                "spark_jobs": null,
+                                "parent_msg_id": "25f85fa1-51e8-4bd9-a021-170902f568f7"
+                            },
+                            "text/plain": "StatementMeta(sparkahez51n, 0, 3, Finished, Available)"
+                        }
+                    }
+                ],
+                "execution_count": 2
+            },
+            {
+                "cell_type": "markdown",
+                "metadata": {
+                    "nteract": {
+                        "transient": {
+                            "deleting": false
+                        }
+                    }
+                },
+                "source": [
+                    "## Load source data\r\n",
+                    "\r\n",
+                    "Let's start by loading some historical sales order data into a dataframe."
+                ]
+            },
+            {
+                "cell_type": "code",
+                "metadata": {
+                    "collapsed": false
+                },
+                "source": [
+                    "order_details = spark.read.csv('/data/*.csv', header=True, inferSchema=True)"
+                ],
+                "outputs": [
+                    {
+                        "output_type": "display_data",
+                        "data": {
+                            "application/vnd.livy.statement-meta+json": {
+                                "spark_pool": "sparkahez51n",
+                                "session_id": "0",
+                                "statement_id": 4,
+                                "state": "finished",
+                                "livy_statement_state": "available",
+                                "queued_time": "2023-11-13T18:26:49.7169014Z",
+                                "session_start_time": null,
+                                "execution_start_time": "2023-11-13T18:26:49.8435088Z",
+                                "execution_finish_time": "2023-11-13T18:27:18.9443037Z",
+                                "spark_jobs": null,
+                                "parent_msg_id": "84f33526-e070-475f-94b2-fa85d712a655"
+                            },
+                            "text/plain": "StatementMeta(sparkahez51n, 0, 4, Finished, Available)"
+                        }
+                    }
+                ],
+                "execution_count": 3
+            },
+            {
+                "cell_type": "markdown",
+                "metadata": {
+                    "nteract": {
+                        "transient": {
+                            "deleting": false
+                        }
+                    }
+                },
+                "source": [
+                    "## Transform the data structure\r\n",
+                    "\r\n",
+                    "The source data includes a **CustomerName** field, that contains the customer's first and last name. Modify the dataframe to separate this field into separate **FirstName** and **LastName** fields."
+                ]
+            },
+            {
+                "cell_type": "code",
+                "metadata": {
+                    "jupyter": {
+                        "source_hidden": false,
+                        "outputs_hidden": false
+                    },
+                    "nteract": {
+                        "transient": {
+                            "deleting": false
+                        }
+                    },
+                    "collapsed": false
+                },
+                "source": [
+                    "from pyspark.sql.functions import split, col\r\n",
+                    "\r\n",
+                    "# Create the new FirstName and LastName fields\r\n",
+                    "transformed_df = order_details.withColumn(\"FirstName\", split(col(\"CustomerName\"), \" \").getItem(0)).withColumn(\"LastName\", split(col(\"CustomerName\"), \" \").getItem(1))\r\n",
+                    "\r\n",
+                    "# Remove the CustomerName field\r\n",
+                    "transformed_df = transformed_df.drop(\"CustomerName\")"
+                ],
+                "outputs": [
+                    {
+                        "output_type": "display_data",
+                        "data": {
+                            "application/vnd.livy.statement-meta+json": {
+                                "spark_pool": "sparkahez51n",
+                                "session_id": "0",
+                                "statement_id": 5,
+                                "state": "finished",
+                                "livy_statement_state": "available",
+                                "queued_time": "2023-11-13T18:27:44.5378634Z",
+                                "session_start_time": null,
+                                "execution_start_time": "2023-11-13T18:27:44.6418419Z",
+                                "execution_finish_time": "2023-11-13T18:27:45.1531297Z",
+                                "spark_jobs": null,
+                                "parent_msg_id": "cf8e0488-1a6c-4653-8c17-fde74f99a5eb"
+                            },
+                            "text/plain": "StatementMeta(sparkahez51n, 0, 5, Finished, Available)"
+                        }
+                    }
+                ],
+                "execution_count": 4
+            },
+            {
+                "cell_type": "markdown",
+                "metadata": {
+                    "nteract": {
+                        "transient": {
+                            "deleting": false
+                        }
+                    }
+                },
+                "source": [
+                    "## Save the transformed data\r\n",
+                    "\r\n",
+                    "Now save the transformed dataframe in Parquet format in a folder specified in a variable (Overwriting the data if it already exists)."
+                ]
+            },
+            {
+                "cell_type": "code",
+                "metadata": {
+                    "jupyter": {
+                        "source_hidden": false,
+                        "outputs_hidden": false
+                    },
+                    "nteract": {
+                        "transient": {
+                            "deleting": false
+                        }
+                    }
+                },
+                "source": [
+                    "transformed_df.write.mode(\"overwrite\").parquet('/%s' % folderName)\r\n",
+                    "print (\"Transformed data saved in %s!\" % folderName)"
+                ],
+                "outputs": [
+                    {
+                        "output_type": "display_data",
+                        "data": {
+                            "application/vnd.livy.statement-meta+json": {
+                                "spark_pool": "sparkahez51n",
+                                "session_id": "0",
+                                "statement_id": 6,
+                                "state": "finished",
+                                "livy_statement_state": "available",
+                                "queued_time": "2023-11-13T18:27:50.0780444Z",
+                                "session_start_time": null,
+                                "execution_start_time": "2023-11-13T18:27:50.1847586Z",
+                                "execution_finish_time": "2023-11-13T18:27:55.4785921Z",
+                                "spark_jobs": null,
+                                "parent_msg_id": "10073a1e-9c0f-4ce9-afc2-ac028be172c7"
+                            },
+                            "text/plain": "StatementMeta(sparkahez51n, 0, 6, Finished, Available)"
+                        }
+                    },
+                    {
+                        "name": "stdout",
+                        "output_type": "stream",
+                        "text": "Transformed data saved in 71b7a753-818c-4dda-b5b6-639a9ec9342b!\n"
+                    }
+                ],
+                "execution_count": 5
+            }
+        ]
+    }
+}

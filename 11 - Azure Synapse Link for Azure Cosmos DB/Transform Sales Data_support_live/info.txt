@@ -1,0 +1,6 @@
+selected resource name:		Transform Sales Data
+selected resource type:		pipeline
+workspace name:			synapseahez51n
+workspace location:		northeurope
+subscription id:		829a22e0-ab51-4203-9590-79bae3d1504b
+time of download (UTC):		Mon, 13 Nov 2023 19:08:51 GMT
