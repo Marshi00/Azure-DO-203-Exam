@@ -1,1 +1,2 @@
 1- start templates
+2- docs in Azure
